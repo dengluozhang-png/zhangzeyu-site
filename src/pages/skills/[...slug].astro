@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const skills = await getCollection('skills');
+  return skills.map((skill) => ({
+    params: { slug: skill.id },
+    props: { skill },
+  }));
+}
+
+const { skill } = Astro.props;
+const { Content } = await render(skill);
+
+const labels: Record<string, string> = {
+  ai: 'AI / Agent',
+  biotech: 'BioAI',
+  compliance: 'Compliance',
+  tooling: 'Tooling',
+  meta: 'Meta',
+};
+
+const skillJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: skill.data.title,
+  description: skill.data.summary,
+  keywords: skill.data.triggers.join(', '),
+  inLanguage: 'zh-CN',
+  author: {
+    '@type': 'Person',
+    name: '张泽宇',
+    url: 'https://zhangzeyu.me',
+  },
+  datePublished: skill.data.publishDate.toISOString(),
+  dateModified: skill.data.updatedDate?.toISOString(),
+  isAccessibleForFree: true,
+};
+---
+
+<BaseLayout
+  title={skill.data.title}
+  description={skill.data.summary}
+  jsonLd={skillJsonLd}
+>
+  <article class="skill">
+    <header class="head">
+      <p class="cat">{labels[skill.data.category] || skill.data.category}</p>
+      <h1>{skill.data.title}</h1>
+      <p class="summary">{skill.data.summary}</p>
+
+      <div class="meta">
+        <div>
+          <span class="lbl">熟练度</span>
+          <span class="val">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span class:list={['dot', { on: i < skill.data.level }]} />
+            ))}
+            <span class="num">{skill.data.level}/5</span>
+          </span>
+        </div>
+        {skill.data.triggers.length > 0 && (
+          <div>
+            <span class="lbl">触发词</span>
+            <span class="val tags">
+              {skill.data.triggers.map((t) => <span class="tag">{t}</span>)}
+            </span>
+          </div>
+        )}
+        <div>
+          <span class="lbl">发布</span>
+          <span class="val">
+            <time datetime={skill.data.publishDate.toISOString()}>
+              {skill.data.publishDate.toISOString().slice(0, 10)}
+            </time>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <hr />
+
+    <p class="back">
+      ← <a href="/skills">所有 Skills</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .skill { padding-top: 12px; }
+  .head { margin-bottom: 28px; }
+  .cat {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  .head h1 { margin: 0 0 10px; }
+  .summary {
+    color: var(--fg-soft);
+    font-size: 1.05rem;
+    margin: 0 0 18px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    padding: 14px 16px;
+    background: var(--bg-soft);
+    border-radius: var(--radius);
+    font-size: 0.92rem;
+  }
+  .lbl {
+    display: block;
+    color: var(--fg-mute);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .val { display: inline-flex; gap: 3px; align-items: center; }
+  .dot {
+    width: 14px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .dot.on { background: var(--accent); }
+  .num { margin-left: 6px; color: var(--fg-soft); }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--fg-soft);
+    font-size: 0.82rem;
+  }
+  .prose p, .prose ul { max-width: 720px; }
+  .back { margin-top: 32px; }
+</style>

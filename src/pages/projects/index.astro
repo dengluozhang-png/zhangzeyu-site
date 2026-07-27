@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => b.data.year - a.data.year
+);
+---
+
+<BaseLayout
+  title="Projects"
+  description="作品集：做过的项目、参与的研究、可分享的开源。"
+>
+  <header class="head">
+    <h1>Projects</h1>
+    <p class="lede">
+      做过的项目、研究、开源贡献。按年份倒序排列。
+    </p>
+  </header>
+
+  <div class="grid">
+    {projects.map((p) => (
+      <article class="card">
+        <header>
+          <span class="year">{p.data.year}</span>
+          <h2>{p.data.title}</h2>
+        </header>
+        <p class="summary">{p.data.summary}</p>
+        {p.data.role && <p class="role">角色：{p.data.role}</p>}
+        {p.data.tags.length > 0 && (
+          <div class="tags">
+            {p.data.tags.map((t) => <span class="tag">{t}</span>)}
+          </div>
+        )}
+        {p.data.links.length > 0 && (
+          <div class="links">
+            {p.data.links.map((l) => (
+              <a href={l.href} rel="noopener">{l.label} ↗</a>
+            ))}
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+
+  {projects.length === 0 && (
+    <p class="empty">
+      还没有项目。请到 <code>src/content/projects/</code> 下新增一个 <code>.md</code> 文件。
+    </p>
+  )}
+</BaseLayout>
+
+<style>
+  .head { margin-bottom: 28px; }
+  .lede { color: var(--fg-soft); margin: 0; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    background: var(--bg-elev);
+  }
+  .card header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .year {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h2 { font-size: 1.1rem; margin: 0; }
+  .summary {
+    color: var(--fg-soft);
+    font-size: 0.95rem;
+    margin: 8px 0;
+  }
+  .role {
+    color: var(--fg-mute);
+    font-size: 0.85rem;
+    margin: 0 0 8px;
+  }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .tag {
+    background: var(--bg-soft);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    color: var(--fg-soft);
+  }
+  .links { display: flex; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
+  .links a { font-size: 0.88rem; }
+  .empty {
+    color: var(--fg-mute);
+    padding: 24px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+  }
+</style>

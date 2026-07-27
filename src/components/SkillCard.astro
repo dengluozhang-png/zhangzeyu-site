@@ -1,0 +1,109 @@
+---
+// 技能卡片：用于 skills 列表页
+interface Props {
+  title: string;
+  slug: string;
+  summary: string;
+  category: string;
+  level: number;
+  triggers: string[];
+  interactive?: boolean;
+}
+const { title, slug, summary, category, level, triggers, interactive } = Astro.props;
+const categoryLabels: Record<string, string> = {
+  ai: 'AI',
+  biotech: 'BioAI',
+  compliance: 'Compliance',
+  tooling: 'Tooling',
+  meta: 'Meta',
+};
+---
+
+<a class="skill-card" href={`/skills/${slug}`}>
+  <div class="head">
+    <span class="cat">{categoryLabels[category] || category}</span>
+    {interactive && <span class="badge">interactive</span>}
+  </div>
+  <h3>{title}</h3>
+  <p class="summary">{summary}</p>
+  <div class="level" title={`熟练度 ${level}/5`}>
+    {Array.from({ length: 5 }).map((_, i) => (
+      <span class:list={['bar', { on: i < level }]} />
+    ))}
+  </div>
+  {triggers.length > 0 && (
+    <div class="triggers">
+      {triggers.slice(0, 4).map((t) => <span class="tag">{t}</span>)}
+    </div>
+  )}
+</a>
+
+<style>
+  .skill-card {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 18px 14px;
+    background: var(--bg-elev);
+    color: var(--fg);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .skill-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .cat {
+    font-size: 0.75rem;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge {
+    font-size: 0.7rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  h3 {
+    margin: 0 0 6px;
+    font-size: 1.05rem;
+  }
+  .summary {
+    color: var(--fg-soft);
+    font-size: 0.92rem;
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+  .level {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 10px;
+  }
+  .bar {
+    width: 16px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+  .bar.on { background: var(--accent); }
+  .triggers {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 0.72rem;
+    color: var(--fg-mute);
+    background: var(--bg-soft);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+</style>

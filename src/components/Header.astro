@@ -1,0 +1,77 @@
+---
+// 顶部导航栏
+interface Props {
+  nav: { href: string; label: string }[];
+}
+const { nav } = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">zhangzeyu<span class="dot">.</span>me</a>
+    <nav class="nav">
+      {nav.map((item) => {
+        const active =
+          item.href === '/'
+            ? currentPath === '/'
+            : currentPath.startsWith(item.href);
+        return (
+          <a href={item.href} class:list={['nav-item', { active }]}>
+            {item.label}
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: saturate(180%) blur(8px);
+  }
+  .wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--fg);
+    border: 0;
+    letter-spacing: -0.01em;
+  }
+  .brand .dot { color: var(--accent); }
+  .brand:hover { color: var(--link); }
+  .nav {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .nav-item {
+    font-size: 0.95rem;
+    color: var(--fg-soft);
+    border: 0;
+    padding: 4px 0;
+  }
+  .nav-item:hover { color: var(--fg); }
+  .nav-item.active {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  @media (max-width: 640px) {
+    .wrap { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .nav { gap: 14px; }
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import SkillCard from '../../components/SkillCard.astro';
+
+const skills = (await getCollection('skills')).sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+);
+
+// 按 category 分组
+const groups: Record<string, typeof skills> = {};
+for (const s of skills) {
+  const c = s.data.category;
+  if (!groups[c]) groups[c] = [];
+  groups[c].push(s);
+}
+const order = ['ai', 'biotech', 'compliance', 'tooling', 'meta'];
+const labels: Record<string, string> = {
+  ai: 'AI / Agent',
+  biotech: 'BioAI',
+  compliance: 'Compliance',
+  tooling: 'Tooling',
+  meta: 'Meta',
+};
+---
+
+<BaseLayout
+  title="Skills"
+  description="张泽宇的技能矩阵与 AI/Prompt 技能清单：AI Agent、BioAI、合规治理相关技能，可被引用、可被复现。"
+>
+  <header class="head">
+    <h1>Skills</h1>
+    <p class="lede">
+      技能矩阵 + 可被引用的 Skill 页面。前者给人看，后者给 AI 抓。
+    </p>
+  </header>
+
+  {order.filter((c) => groups[c]?.length).map((cat) => (
+    <section class="group">
+      <h2>{labels[cat]}</h2>
+      <div class="grid">
+        {groups[cat].map((s) => (
+          <SkillCard
+            title={s.data.title}
+            slug={s.id}
+            summary={s.data.summary}
+            category={s.data.category}
+            level={s.data.level}
+            triggers={s.data.triggers}
+            interactive={s.data.interactive}
+          />
+        ))}
+      </div>
+    </section>
+  ))}
+
+  {skills.length === 0 && (
+    <p class="empty">
+      还没有 skill 条目。请到 <code>src/content/skills/</code> 下新增一个 <code>.md</code> 文件。
+    </p>
+  )}
+</BaseLayout>
+
+<style>
+  .head { margin-bottom: 28px; }
+  .lede { color: var(--fg-soft); margin: 0; }
+  .group { margin-top: 32px; }
+  .group h2 {
+    font-size: 1.1rem;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-top: 0;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+  }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .empty {
+    color: var(--fg-mute);
+    padding: 24px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+  }
+</style>

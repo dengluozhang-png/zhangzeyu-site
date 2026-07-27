@@ -1,0 +1,78 @@
+---
+// SEO 组件：Title / Description / OG / Twitter Card / Canonical / JSON-LD
+// 把所有 SEO 信息集中在这，方便全文统一
+
+import { SITE } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  image = SITE.ogImage,
+  jsonLd,
+  noindex = SITE.noindex,
+} = Astro.props;
+
+const fullTitle = title ? `${title} · ${SITE.authorGivenName} ${SITE.authorFamilyName}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const imageUrl = new URL(image, Astro.site).toString();
+
+// Person schema：让 AI 知道这个站点的"主人"
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.author,
+  givenName: SITE.authorGivenName,
+  familyName: SITE.authorFamilyName,
+  alternateName: SITE.authorAliases,
+  url: SITE.url,
+  jobTitle: 'AI Agent Engineer · BioAI · Compliance',
+  knowsAbout: [
+    'AI Agent',
+    'Large Language Model',
+    'Prompt Engineering',
+    'Agent Governance',
+    'AI Compliance',
+    'BioAI',
+    'Clinical Evidence Evaluation',
+  ],
+};
+
+const finalJsonLd = Array.isArray(jsonLd)
+  ? [personSchema, ...jsonLd]
+  : jsonLd
+    ? [personSchema, jsonLd]
+    : [personSchema];
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<meta name="author" content={SITE.author} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex,nofollow" />}
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:site_name" content={`${SITE.authorGivenName} ${SITE.authorFamilyName}`} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+{
+  finalJsonLd.map((schema) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))
+}

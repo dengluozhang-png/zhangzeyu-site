@@ -1,0 +1,74 @@
+---
+// 底部页脚：联系方式 + 版权 + JSON-LD hint
+import { SITE } from '../consts';
+interface Props {
+  socials: { href: string; label: string }[];
+}
+const { socials } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="col">
+      <div class="brand-line">
+        <span class="brand-name">{SITE.authorGivenName} {SITE.authorFamilyName}</span>
+      </div>
+      <p class="tag">{SITE.description}</p>
+    </div>
+    <div class="col right">
+      <ul class="socials">
+        {socials.map((s) => (
+          <li><a href={s.href} rel="me noopener">{s.label}</a></li>
+        ))}
+      </ul>
+      <p class="copyright">© {year} {SITE.author}. Built with Astro.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--bg-soft);
+    margin-top: 96px;
+  }
+  .wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 36px 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+  }
+  @media (max-width: 640px) {
+    .wrap { grid-template-columns: 1fr; }
+  }
+  .brand-line { font-weight: 600; font-size: 1rem; }
+  .tag {
+    color: var(--fg-mute);
+    font-size: 0.9rem;
+    max-width: 480px;
+    margin: 6px 0 0;
+  }
+  .right { text-align: right; }
+  @media (max-width: 640px) { .right { text-align: left; } }
+  .socials {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 6px;
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 640px) {
+    .socials { justify-content: flex-start; }
+  }
+  .socials li { font-size: 0.92rem; }
+  .copyright {
+    color: var(--fg-mute);
+    font-size: 0.82rem;
+    margin: 0;
+  }
+</style>

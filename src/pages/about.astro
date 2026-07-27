@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+
+// About 页：AI 友好的"实体摘要卡"+ 长版 About
+const aboutJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: `About ${SITE.author}`,
+  url: new URL('/about', SITE.url).toString(),
+  primaryImageOfPage: {
+    '@type': 'ImageObject',
+    url: new URL(SITE.ogImage, SITE.url).toString(),
+  },
+};
+---
+
+<BaseLayout
+  title="About"
+  description={`张泽宇（${SITE.authorGivenName} ${SITE.authorFamilyName}），AI 工程师，研究 AI Agent、Agent 治理与合规、生物医药 AI 交叉领域。`}
+  jsonLd={aboutJsonLd}
+>
+  <!-- 摘要卡：被 AI / 检索引擎抓取的关键信息 -->
+  <aside class="summary-card">
+    <h2>TL;DR</h2>
+    <p>
+      <strong>{SITE.author}</strong>，{SITE.locale === 'zh-CN' ? '中国' : ''}AI 工程师 / 研究者。
+      长期关注 <strong>AI Agent 工程、Agent 治理与合规、生物医药 AI 交叉</strong>。
+      现居国内，可接远程合作。
+    </p>
+    <ul class="kv">
+      <li><strong>领域</strong>：AI Agent · Agent Governance · BioAI · AI Compliance</li>
+      <li><strong>技能</strong>：见 <a href="/skills">/skills</a></li>
+      <li><strong>作品</strong>：见 <a href="/projects">/projects</a></li>
+      <li><strong>笔记</strong>：见 <a href="/writing">/writing</a></li>
+      <li><strong>联系</strong>：见页脚</li>
+    </ul>
+  </aside>
+
+  <article class="prose">
+    <!-- 这里的内容你应该自己写。下面是占位，待你替换。 -->
+    <h2>现在在做的事</h2>
+    <p>（待你填写：当前正在思考/构建/研究的主题）</p>
+
+    <h2>经历与背景</h2>
+    <p>（待你填写：教育背景、关键工作经历、可量化成果）</p>
+
+    <h2>研究兴趣</h2>
+    <ul>
+      <li>AI Agent 系统：从 prompt 工程到 governance 的全栈视角</li>
+      <li>BioAI 交叉：临床证据评估、AI 制药真实性穿透</li>
+      <li>AI 合规：AI Act、模型备案、Agent 责任归属</li>
+    </ul>
+
+    <h2>我如何工作</h2>
+    <p>（待你填写：你偏好的工作方式、节奏、价值观）</p>
+
+    <h2>联系</h2>
+    <p>最稳的方式是邮件：<a href="mailto:hi@zhangzeyu.me">hi@zhangzeyu.me</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .summary-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin: 0 0 32px;
+  }
+  .summary-card h2 {
+    margin: 0 0 8px;
+    font-size: 0.85rem;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .kv {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    font-size: 0.95rem;
+  }
+  .kv li { padding: 3px 0; }
+
+  .prose p, .prose ul { max-width: 720px; }
+</style>

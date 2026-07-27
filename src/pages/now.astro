@@ -1,0 +1,56 @@
+---
+// Now 页面：经典独立页 "我现在在做什么"
+// 建议每 1-2 周更新一次
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const lastUpdated = new Date();
+const ymd = lastUpdated.toISOString().slice(0, 10);
+---
+
+<BaseLayout
+  title="Now"
+  description={`张泽宇（Zhang Zeyu）当前在做的事。Last updated ${ymd}。`}
+>
+  <header class="head">
+    <h1>Now</h1>
+    <p class="lede">
+      这页灵感来自 <a href="https://nownownow.com/about" rel="noopener">nownownow</a>。
+      短平快地写当下在做的几件事。每 1-2 周更新一次。
+    </p>
+    <p class="updated">Last updated: <time datetime={lastUpdated.toISOString()}>{ymd}</time></p>
+  </header>
+
+  <div class="prose">
+    <h2>在做的事</h2>
+    <ul>
+      <li>……（待你填写）</li>
+      <li>……</li>
+      <li>……</li>
+    </ul>
+
+    <h2>在想的事</h2>
+    <ul>
+      <li>……</li>
+      <li>……</li>
+    </ul>
+
+    <h2>想找的合作</h2>
+    <ul>
+      <li>……</li>
+    </ul>
+
+    <h2>不接的</h2>
+    <p>……</p>
+  </div>
+</BaseLayout>
+
+<style>
+  .head { margin-bottom: 28px; }
+  .lede { color: var(--fg-soft); margin: 0 0 8px; }
+  .updated {
+    color: var(--fg-mute);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .prose { max-width: 720px; }
+</style>

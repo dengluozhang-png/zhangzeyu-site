@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const writings = await getCollection('writing', ({ data }) => !data.draft);
+  return writings.map((writing) => ({
+    params: { slug: writing.id },
+    props: { writing },
+  }));
+}
+
+const { writing } = Astro.props;
+const { Content } = await render(writing);
+
+// 全文顶部"TL;DR 卡片"：AI 友好的引用目标
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: writing.data.title,
+  description: writing.data.summary,
+  keywords: writing.data.tags.join(', '),
+  inLanguage: 'zh-CN',
+  author: {
+    '@type': 'Person',
+    name: '张泽宇',
+    url: 'https://zhangzeyu.me',
+  },
+  publisher: {
+    '@type': 'Person',
+    name: '张泽宇',
+    url: 'https://zhangzeyu.me',
+  },
+  datePublished: writing.data.publishDate.toISOString(),
+  dateModified: writing.data.updatedDate?.toISOString() ?? writing.data.publishDate.toISOString(),
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString(),
+};
+---
+
+<BaseLayout
+  title={writing.data.title}
+  description={writing.data.summary}
+  jsonLd={articleJsonLd}
+>
+  <article class="post">
+    <header class="head">
+      <h1>{writing.data.title}</h1>
+      <div class="meta">
+        <time datetime={writing.data.publishDate.toISOString()}>
+          {writing.data.publishDate.toISOString().slice(0, 10)}
+        </time>
+        {writing.data.updatedDate && (
+          <span class="updated">
+            （更新于 {writing.data.updatedDate.toISOString().slice(0, 10)}）
+          </span>
+        )}
+        {writing.data.tags.length > 0 && (
+          <span class="tags">
+            {writing.data.tags.map((t) => <span class="tag">#{t}</span>)}
+          </span>
+        )}
+      </div>
+    </header>
+
+    <!-- TL;DR 卡片：放在文章最前面，AI 抓取时这里是关键摘要 -->
+    <aside class="tldr">
+      <strong>TL;DR</strong>
+      <p>{writing.data.summary}</p>
+    </aside>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <hr />
+    <p class="back">← <a href="/writing">所有文章</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .post { padding-top: 12px; }
+  .head { margin-bottom: 18px; }
+  h1 { margin: 0 0 10px; }
+  .meta {
+    color: var(--fg-mute);
+    font-size: 0.9rem;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .updated { font-style: italic; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    background: var(--bg-soft);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--fg-soft);
+    font-size: 0.82rem;
+  }
+  .tldr {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+    border-radius: 4px;
+    margin: 0 0 28px;
+    font-size: 0.96rem;
+  }
+  .tldr strong {
+    display: block;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    color: var(--accent);
+  }
+  .tldr p { margin: 0; color: var(--fg); }
+  .prose p, .prose ul, .prose ol { max-width: 720px; }
+  .back { margin-top: 32px; }
+</style>

@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+import { getCollection } from 'astro:content';
+import SkillCard from '../components/SkillCard.astro';
+import ToolCard from '../components/ToolCard.astro';
+
+const skills = (await getCollection('skills')).sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+);
+const tools = (await getCollection('tools', ({ data }) => !data.draft));
+
+const topSkills = skills.slice(0, 4);
+const topTools = tools.slice(0, 3);
+
+const homepageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  url: SITE.url,
+  description: SITE.description,
+  author: {
+    '@type': 'Person',
+    name: SITE.author,
+    url: SITE.url,
+  },
+};
+---
+
+<BaseLayout jsonLd={homepageJsonLd}>
+  <!-- AI-friendly 实体摘要卡：AI 抓取时这是关键信息 -->
+  <section class="hero">
+    <p class="kicker">Personal Site · AI Agent × BioAI × Compliance</p>
+    <h1>{SITE.author}（{SITE.authorGivenName.toLowerCase()}{SITE.authorFamilyName.toLowerCase()}）</h1>
+    <p class="lede">
+      {SITE.description}
+    </p>
+    <p class="entity-card">
+      张泽宇（Zhang Zeyu / Zeyu Zhang）是 AI 工程师、研究者，关注
+      <strong>AI Agent 工程、Agent 治理与合规、生物医药 AI 交叉</strong>。
+      这里沉淀笔记、Skill 与可视化工具。
+    </p>
+    <p class="ctas">
+      <a class="cta primary" href="/skills">看 Skills →</a>
+      <a class="cta" href="/tools">用 Tools →</a>
+      <a class="cta" href="/writing">读 Writing →</a>
+    </p>
+  </section>
+
+  {topSkills.length > 0 && (
+    <section>
+      <div class="section-head">
+        <h2>Featured Skills</h2>
+        <a class="more" href="/skills">全部 →</a>
+      </div>
+      <div class="grid two">
+        {topSkills.map((s) => (
+          <SkillCard
+            title={s.data.title}
+            slug={s.id}
+            summary={s.data.summary}
+            category={s.data.category}
+            level={s.data.level}
+            triggers={s.data.triggers}
+            interactive={s.data.interactive}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {topTools.length > 0 && (
+    <section>
+      <div class="section-head">
+        <h2>Tools</h2>
+        <a class="more" href="/tools">全部 →</a>
+      </div>
+      <div class="grid one">
+        {topTools.map((t) => (
+          <ToolCard
+            title={t.data.title}
+            slug={t.id}
+            summary={t.data.summary}
+            category={t.data.category}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section>
+    <h2>What this site is</h2>
+    <p>
+      一个面向 <strong>AI 时代</strong> 的个人品牌站。这里不堆名词，只放三样东西：
+    </p>
+    <ul>
+      <li><strong>Skills</strong>：可被引用的 AI/Prompt 技能与技能矩阵。</li>
+      <li><strong>Tools</strong>：可视化、可交互的 web 工具（计算器、生成器、可视化）。</li>
+      <li><strong>Writing</strong>：AI Agent、合规、BioAI 相关的笔记与读后感。</li>
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 12px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+  .kicker {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: 2.2rem;
+    margin: 0 0 12px;
+  }
+  .lede {
+    color: var(--fg-soft);
+    font-size: 1.05rem;
+    max-width: 640px;
+    margin: 0 0 16px;
+  }
+  .entity-card {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--accent);
+    padding: 12px 14px;
+    border-radius: 4px;
+    margin: 0 0 24px;
+    font-size: 0.94rem;
+    color: var(--fg-soft);
+  }
+  .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cta {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--fg);
+    font-size: 0.92rem;
+    transition: all 0.15s;
+  }
+  .cta:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .cta.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .cta.primary:hover {
+    color: #fff;
+    background: var(--link-hover);
+    border-color: var(--link-hover);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 36px;
+  }
+  .section-head h2 { margin: 0; }
+  .more {
+    font-size: 0.9rem;
+    color: var(--fg-soft);
+    border: 0;
+  }
+  .more:hover { color: var(--accent); }
+
+  .grid {
+    display: grid;
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .grid.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid.one { grid-template-columns: 1fr; }
+  @media (max-width: 640px) {
+    .grid.two { grid-template-columns: 1fr; }
+    h1 { font-size: 1.6rem; }
+  }
+</style>

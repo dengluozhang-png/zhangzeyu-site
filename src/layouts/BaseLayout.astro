@@ -1,0 +1,173 @@
+---
+// 全站基础布局：HTML 骨架 + Header + Footer + SEO + Person JSON-LD
+// 每个具体页面都包一层 BaseLayout
+
+import { NAV, SITE, SOCIALS } from '../consts';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SEO from '../components/SEO.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  image,
+  jsonLd,
+  noindex = SITE.noindex,
+  bodyClass = '',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <SEO
+      title={title}
+      description={description}
+      image={image}
+      jsonLd={jsonLd}
+      noindex={noindex}
+    />
+  </head>
+  <body class={bodyClass}>
+    <Header nav={NAV} />
+    <main class="site-main">
+      <slot />
+    </main>
+    <Footer socials={SOCIALS} />
+  </body>
+</html>
+
+<style is:global>
+  /* CSS variables：全站唯一调色板 */
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f6f6f4;
+    --bg-elev: #fafaf8;
+    --fg: #0f0f0f;
+    --fg-soft: #555555;
+    --fg-mute: #8a8a8a;
+    --border: #e6e6e3;
+    --accent: #0b6e4f;
+    --accent-soft: #0b6e4f10;
+    --link: #0b6e4f;
+    --link-hover: #084c37;
+    --max-w: 780px;
+    --max-w-wide: 1100px;
+    --radius: 6px;
+    --radius-lg: 12px;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+      "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+      Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e0e0e;
+      --bg-soft: #161616;
+      --bg-elev: #1c1c1c;
+      --fg: #ededed;
+      --fg-soft: #b8b8b8;
+      --fg-mute: #777777;
+      --border: #2a2a2a;
+      --accent: #5fcfac;
+      --accent-soft: #5fcfac18;
+      --link: #5fcfac;
+      --link-hover: #a7e6cf;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+  a:hover { border-bottom-color: var(--link-hover); }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--fg);
+  }
+
+  .site-main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 32px 24px 96px;
+  }
+  .site-main.wide { max-width: var(--max-w-wide); }
+
+  h1, h2, h3, h4 { line-height: 1.3; letter-spacing: -0.01em; }
+  h1 { font-size: 2rem; margin-top: 0; }
+  h2 { font-size: 1.5rem; margin-top: 2.2em; }
+  h3 { font-size: 1.2rem; margin-top: 1.8em; }
+
+  p, ul, ol { margin: 0.9em 0; }
+  ul, ol { padding-left: 1.4em; }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--bg-soft);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+  pre {
+    background: var(--bg-soft);
+    padding: 1em 1.2em;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+  }
+  pre code { background: transparent; padding: 0; }
+
+  blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.2em 0 0.2em 1em;
+    color: var(--fg-soft);
+  }
+
+  img, svg { max-width: 100%; }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 2.5em 0;
+  }
+
+  /* 移动端微调 */
+  @media (max-width: 640px) {
+    .site-main { padding: 24px 18px 64px; }
+    h1 { font-size: 1.6rem; }
+    h2 { font-size: 1.3rem; }
+  }
+</style>

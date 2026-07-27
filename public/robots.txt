@@ -1,0 +1,4 @@
+# Cloudflare Pages / Astro 个人站 robots
+# 第一次部署且 noindex=true 时全部禁止抓取，调试完成后改 noindex=false 再交给搜索引擎
+User-agent: *
+Disallow: /
