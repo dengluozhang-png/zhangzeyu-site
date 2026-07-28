@@ -10,6 +10,8 @@ interface Props {
   image?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
+  breadcrumbs?: { name: string; href: string }[];
+  siteSchema?: boolean; // 是否输出 Organization + WebSite（默认仅首页）
 }
 
 const {
@@ -18,12 +20,15 @@ const {
   image = SITE.ogImage,
   jsonLd,
   noindex = SITE.noindex,
+  breadcrumbs,
+  siteSchema = Astro.url.pathname === '/' || Astro.url.pathname === '',
 } = Astro.props;
 
 const fullTitle = title ? `${title} · ${SITE.authorGivenName} ${SITE.authorFamilyName}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const imageUrl = new URL(image, Astro.site).toString();
 
+// ======== 全局 JSON-LD：Person ========
 // Person schema：让 AI 知道这个站点的"主人"
 const personSchema = {
   '@context': 'https://schema.org',
@@ -33,23 +38,98 @@ const personSchema = {
   familyName: SITE.authorFamilyName,
   alternateName: SITE.authorAliases,
   url: SITE.url,
-  jobTitle: 'AI Agent Engineer · BioAI · Compliance',
+  jobTitle: 'AI Compliance Counsel · Agent Governance · BioAI',
   knowsAbout: [
     'AI Agent',
+    'AI Governance',
+    'Agent Compliance',
     'Large Language Model',
     'Prompt Engineering',
-    'Agent Governance',
-    'AI Compliance',
+    'Agent Constitutional Self-Check',
+    'AI Algorithm Filing',
+    'Cross-border Data Compliance',
     'BioAI',
     'Clinical Evidence Evaluation',
+    'OWASP Agentic Top 10',
+    'A2A Protocol',
+  ],
+  sameAs: [
+    'https://github.com/lawcontinue',
   ],
 };
 
-const finalJsonLd = Array.isArray(jsonLd)
-  ? [personSchema, ...jsonLd]
-  : jsonLd
-    ? [personSchema, jsonLd]
-    : [personSchema];
+// ======== 首页：Organization + WebSite + SearchAction ========
+// 让 AI 搜索引擎识别站点身份，并支持站内搜索建议
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE.url}/#organization`,
+  name: SITE.title,
+  url: SITE.url,
+  logo: new URL('/favicon.svg', Astro.site).toString(),
+  founder: {
+    '@type': 'Person',
+    '@id': `${SITE.url}/#person`,
+    name: SITE.author,
+  },
+  sameAs: [
+    'https://github.com/lawcontinue',
+  ],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE.url}/#website`,
+  name: SITE.title,
+  url: SITE.url,
+  description: SITE.description,
+  inLanguage: SITE.locale,
+  publisher: {
+    '@type': 'Organization',
+    '@id': `${SITE.url}/#organization`,
+  },
+  // SearchAction：搜索引擎能直接给用户建议
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE.url}/?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+// ======== 面包屑（可选） ========
+const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((crumb, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: crumb.name,
+        item: new URL(crumb.href, Astro.site).toString(),
+      })),
+    }
+  : null;
+
+// ======== 装配所有 schema ========
+const allSchemas: Record<string, unknown>[] = [personSchema];
+if (siteSchema) {
+  allSchemas.push(organizationSchema);
+  allSchemas.push(websiteSchema);
+}
+if (breadcrumbSchema) {
+  allSchemas.push(breadcrumbSchema);
+}
+if (jsonLd) {
+  if (Array.isArray(jsonLd)) {
+    allSchemas.push(...jsonLd);
+  } else {
+    allSchemas.push(jsonLd);
+  }
+}
 ---
 
 <title>{fullTitle}</title>
@@ -72,7 +152,7 @@ const finalJsonLd = Array.isArray(jsonLd)
 <meta name="twitter:image" content={imageUrl} />
 
 {
-  finalJsonLd.map((schema) => (
+  allSchemas.map((schema) => (
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
   ))
 }

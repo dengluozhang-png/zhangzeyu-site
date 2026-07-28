@@ -1,4 +1,8 @@
-# Cloudflare Pages / Astro 个人站 robots
-# 第一次部署且 noindex=true 时全部禁止抓取，调试完成后改 noindex=false 再交给搜索引擎
+# 张泽钰（Zeyu Zhang）个人站 robots
+# 站点已开放收录，欢迎搜索引擎抓取
+
 User-agent: *
-Disallow: /
+Allow: /
+
+# Sitemap 位置
+Sitemap: https://zhangzeyu-site.vercel.app/sitemap-index.xml

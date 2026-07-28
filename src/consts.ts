@@ -2,8 +2,8 @@
 // 改这里一处，全站生效
 
 export const SITE = {
-  // 上线前替换成真实域名
-  url: 'https://zhangzeyu.me',
+  // 当前部署在 Vercel 预览域，等 zhangzeyu.me 域名接入后改这里
+  url: 'https://zhangzeyu-site.vercel.app',
   title: '张泽钰 · 执业律师 × AI 合规 × Agent 治理',
   description:
     'AI 时代个人品牌站。执业律师 + AI 合规法务工程师，关注 AI Agent 治理、算法备案、BioAI 交叉领域 — 张泽钰（Zeyu Zhang）的笔记、工具与项目。',
@@ -15,7 +15,7 @@ export const SITE = {
   locale: 'zh-CN',
   ogImage: '/og-default.png',
   // 真实购买后改成 true
-  noindex: true,
+  noindex: false,
 };
 
 // 顶部导航（顺序敏感）

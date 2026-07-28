@@ -27,3 +27,4 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+geo_score_report.json

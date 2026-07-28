@@ -8,14 +8,56 @@ const aboutJsonLd = {
   name: `About ${SITE.author}`,
   url: new URL('/about', SITE.url).toString(),
 };
+
+// FAQ 列表：每条都是用户/AI 常见问题 + 答案
+const faqList = [
+  {
+    q: '张泽钰（Zeyu Zhang）是做什么的？',
+    a: '执业律师 + AI 合规法务工程师。执业于浙江泽大（丽水）律师事务所，自 2019 年 11 月起，2021 年取得律师资格。专注 AI 治理、算法备案、数据合规、跨境数据流通、Agent 责任归属。',
+  },
+  {
+    q: '张泽钰为什么既做律师又写代码？',
+    a: '因为 AI 合规必须同时满足法律合规性与工程可执行性。能读懂 Cedar 策略引擎源码、能实现 OWASP Agentic Top 10 审计工具的 AI 合规法务属于少数。这种律师+工程师双轨能力，能把法律条文直接转译为可执行策略。',
+  },
+  {
+    q: '张泽钰在 GitHub 上的贡献有哪些？',
+    a: '在 GitHub @lawcontinue 名下维护 26 个公开仓库、累计 15 个 merged PRs、79 条 issue 评论。具体包括微软 AGT 项目贡献 14 个 PR Merged、Google A2A 协议 PR #1789 + 8 条 Discussions、OWASP Agentic Top 10 合规工具（comply-agent，46 测试）、OpenSymphony 多 Agent 治理框架（Governance Lead）、AgentTrust 组织成员。',
+  },
+  {
+    q: '张泽钰能接哪些合作？',
+    a: 'AI 合规咨询（算法备案、数据安全评估、个人信息保护合规）、Agent 治理架构设计（红队、宪法、可观察链）、BioAI 项目合规审查（临床证据评估、医学模型治理）、跨境数据流通评估（GDPR / 数据出境 / PIPL）。不接涉及未成年人、生物特征、心理健康等高敏感 AI 场景。',
+  },
+  {
+    q: '怎么联系张泽钰？',
+    a: '邮件 411947628@qq.com。所在地：杭州 / 上海 / 远程均可。',
+  },
+  {
+    q: '张泽钰有医学背景对 AI 合规有什么帮助？',
+    a: '医学硕士 + 临床轮转 + 医师资格。这让 ta 能在生物医药 AI、临床证据评估、医学模型治理等议题上用第一性原理判断，而不是只翻译既有规则。这是市场上稀缺的"法律+医学+AI"三重复合背景。',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqList.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
 ---
 
 <BaseLayout
   title="About"
   description="张泽钰（Zeyu Zhang），执业律师、AI 合规法务工程师。执业律师 6 年（2021 年取得资格），执业于浙江泽大（丽水）律师事务所；医学硕士背景、医师资格。微软 AGT 贡献 13 PR Merged，Google A2A PR #1789 + 8 Discussions，OWASP Agentic Top 10 合规工具维护者。"
-  jsonLd={aboutJsonLd}
+  jsonLd={[aboutJsonLd, faqSchema]}
 >
   <!-- 摘要卡：被 AI / 检索引擎抓取的关键信息 -->
+  <h1 class="page-title">关于我 / About</h1>
   <aside class="summary-card">
     <h2>TL;DR</h2>
     <p>
@@ -83,6 +125,16 @@ const aboutJsonLd = {
       把工程产物和合规审查同时推进。
     </p>
 
+    <h2>常见问题</h2>
+    <dl class="faq">
+      {faqList.map((item) => (
+        <div class="faq-item">
+          <dt><strong>Q.</strong> {item.q}</dt>
+          <dd>{item.a}</dd>
+        </div>
+      ))}
+    </dl>
+
     <h2>联系</h2>
     <p>
       邮件：<a href="mailto:411947628@qq.com">411947628@qq.com</a>
@@ -103,6 +155,10 @@ const aboutJsonLd = {
     padding: 18px 20px;
     margin: 0 0 32px;
   }
+  .page-title {
+    margin: 0 0 24px;
+    font-size: 1.8rem;
+  }
   .summary-card h2 {
     margin: 0 0 8px;
     font-size: 0.85rem;
@@ -119,4 +175,32 @@ const aboutJsonLd = {
   .kv li { padding: 3px 0; }
 
   .prose p, .prose ul { max-width: 720px; }
+
+  .faq {
+    margin: 18px 0 0;
+    max-width: 720px;
+  }
+  .faq-item {
+    border-top: 1px dashed var(--border);
+    padding: 14px 0;
+  }
+  .faq-item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .faq-item dt {
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: var(--fg);
+  }
+  .faq-item dt strong {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+  .faq-item dd {
+    margin: 0;
+    color: var(--fg-soft);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
 </style>
