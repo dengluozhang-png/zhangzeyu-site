@@ -18,29 +18,53 @@ const ymd = lastUpdated.toISOString().slice(0, 10);
     <p class="updated">Last updated: <time datetime={lastUpdated.toISOString()}>{ymd}</time></p>
   </header>
 
-  <div class="prose">
+  <article class="prose">
     <h2>在做的事</h2>
-    <ul>
-      <li>把几个 Agent 项目（Hippo、comply-agent、agent-passport-system）的合规层接到中国/欧盟两边的算法备案流程上</li>
-      <li>维护 OpenSymphony 治理乐谱，担任 Governance Lead</li>
-      <li>推进 OWASP Agentic Top 10 中文版的 review 与本地化</li>
-      <li>每周一篇 Multi-Agent 实战周刊</li>
-    </ul>
+
+    <h3>法律 + 技术双轨实战</h3>
+    <p>
+      法律实务 6 年（2019.11 至今，2021 取得执业资格）+ 微软 AGT 14 PR + A2A 一致性套件 1 PR 合并。
+      能读懂 Cedar 策略引擎源码、实现 OWASP Agentic Top 10 审计工具的 AI 合规法务属于少数。
+    </p>
+
+    <h3>治理标准跟进第一线</h3>
+    <p>
+      AgentTrust 组织成员，AAIF 生态贡献者，A2A 协议身份验证框架被 Google 列入 CTEF punch list。
+      A2A 一致性套件 wire layer second-implementation evidence。
+      在 GitHub 上和安全标准制定者直接讨论。
+    </p>
+
+    <h3>算法备案 + 数据合规深度跟踪</h3>
+    <p>
+      2026 算法备案双轨制、生成式 AI 内容标识办法、EU AI Act、ISO 42001。
+      理解监管逻辑，把合规要求拆解成产品需求。
+    </p>
+
+    <h3>合规工具化思维</h3>
+    <p>
+      <a href="https://github.com/lawcontinue/comply-agent" rel="noopener">comply-agent</a>（OWASP ASI01-09 全覆盖 + EU/中国/ISO 法规数据库，46 测试）。
+      合规不是写报告，是建系统。
+    </p>
+
+    <h3>风险分级框架</h3>
+    <p>
+      追责光谱方法论（刑事→行政→民事→声誉），不是二元判断而是分级风险架构。
+      来自 200+ 场 Multi-Agent 治理会议的实战沉淀。
+    </p>
+
+    <h3>社区影响力</h3>
+    <p>
+      GitHub 79 条评论 · 13 仓库贡献 · AgentTrust 组织成员 · AAIF 生态贡献者。
+      在标准制定一线发声。
+    </p>
 
     <h2>在想的事</h2>
-    <p>
-      （占位 — 待本人后续补充。下一版更新时填入具体思考题。）
-    </p>
+    <p>（占位 — 待本人后续补充。）</p>
 
     <h2>联系</h2>
-    <p>
-      有合作意向请邮件 <a href="mailto:411947628@qq.com">411947628@qq.com</a>。
-    </p>
-    <p>
-      可接范围：AI 合规咨询、算法备案支持、Agent 治理架构设计、
-      BioAI 项目合规审查、跨境数据流通评估。
-    </p>
-  </div>
+    <p>有合作意向请邮件 <a href="mailto:411947628@qq.com">411947628@qq.com</a>。</p>
+    <p>可接范围：AI 合规咨询、算法备案支持、Agent 治理架构设计、BioAI 项目合规审查、跨境数据流通评估。</p>
+  </article>
 </BaseLayout>
 
 <style>
@@ -52,4 +76,10 @@ const ymd = lastUpdated.toISOString().slice(0, 10);
     margin: 0;
   }
   .prose { max-width: 720px; }
+  .prose h3 {
+    margin-top: 1.4em;
+    font-size: 1rem;
+    color: var(--fg-soft);
+    font-weight: 600;
+  }
 </style>
