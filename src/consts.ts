@@ -4,14 +4,14 @@
 export const SITE = {
   // 上线前替换成真实域名
   url: 'https://zhangzeyu.me',
-  title: '张泽宇 · AI Agent × 生物医药 × 合规治理',
+  title: '张泽钰 · 执业律师 × AI 合规 × Agent 治理',
   description:
-    'AI 时代个人品牌站。AI Agent 工程、Agent 治理与合规、BioAI 交叉领域 — 张泽宇（zhangzeyu）的笔记、工具与项目。',
-  author: '张泽宇 (Zhang Zeyu)',
+    'AI 时代个人品牌站。执业律师 + AI 合规法务工程师，关注 AI Agent 治理、算法备案、BioAI 交叉领域 — 张泽钰（Zeyu Zhang）的笔记、工具与项目。',
+  author: '张泽钰 (Zhang Zeyu)',
   authorGivenName: 'Zeyu',
   authorFamilyName: 'Zhang',
   // 用于 Person schema 的"alternateName"，让 AI 引用时更多样
-  authorAliases: ['zhangzeyu', 'Zhang Zeyu', 'Zeyu Zhang'],
+  authorAliases: ['张泽钰', 'zhangzeyu', 'Zhang Zeyu', 'Zeyu Zhang', 'lawcontinue'],
   locale: 'zh-CN',
   ogImage: '/og-default.png',
   // 真实购买后改成 true

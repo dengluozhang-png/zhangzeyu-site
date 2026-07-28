@@ -1,6 +1,4 @@
 ---
-// Now 页面：经典独立页 "我现在在做什么"
-// 建议每 1-2 周更新一次
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const lastUpdated = new Date();
@@ -9,7 +7,7 @@ const ymd = lastUpdated.toISOString().slice(0, 10);
 
 <BaseLayout
   title="Now"
-  description={`张泽宇（Zhang Zeyu）当前在做的事。Last updated ${ymd}。`}
+  description={`张泽钰（Zeyu Zhang）当前在做的事。Last updated ${ymd}。`}
 >
   <header class="head">
     <h1>Now</h1>
@@ -23,24 +21,25 @@ const ymd = lastUpdated.toISOString().slice(0, 10);
   <div class="prose">
     <h2>在做的事</h2>
     <ul>
-      <li>……（待你填写）</li>
-      <li>……</li>
-      <li>……</li>
+      <li>把几个 Agent 项目（Hippo、comply-agent、agent-passport-system）的合规层接到中国/欧盟两边的算法备案流程上</li>
+      <li>维护 OpenSymphony 治理乐谱，担任 Governance Lead</li>
+      <li>推进 OWASP Agentic Top 10 中文版的 review 与本地化</li>
+      <li>每周一篇 Multi-Agent 实战周刊</li>
     </ul>
 
     <h2>在想的事</h2>
-    <ul>
-      <li>……</li>
-      <li>……</li>
-    </ul>
+    <p>
+      （占位 — 待本人后续补充。下一版更新时填入具体思考题。）
+    </p>
 
-    <h2>想找的合作</h2>
-    <ul>
-      <li>……</li>
-    </ul>
-
-    <h2>不接的</h2>
-    <p>……</p>
+    <h2>联系</h2>
+    <p>
+      有合作意向请邮件 <a href="mailto:hi@zhangzeyu.me">hi@zhangzeyu.me</a>。
+    </p>
+    <p>
+      可接范围：AI 合规咨询、算法备案支持、Agent 治理架构设计、
+      BioAI 项目合规审查、跨境数据流通评估。
+    </p>
   </div>
 </BaseLayout>
 
