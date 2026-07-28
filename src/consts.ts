@@ -33,5 +33,5 @@ export const NAV = [
 export const SOCIALS = [
   { href: 'https://github.com/zhangzeyu', label: 'GitHub' },
   { href: 'https://x.com/zhangzeyu', label: 'X (Twitter)' },
-  { href: 'mailto:hi@zhangzeyu.me', label: 'Email' },
+  { href: 'mailto:411947628@qq.com', label: 'Email' },
 ];
