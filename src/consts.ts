@@ -31,7 +31,21 @@ export const NAV = [
 
 // 联系方式 / 社交链接（指向自己的真实账号）
 export const SOCIALS = [
-  { href: 'https://github.com/zhangzeyu', label: 'GitHub' },
+  { href: 'https://github.com/lawcontinue', label: 'GitHub' },
   { href: 'https://x.com/zhangzeyu', label: 'X (Twitter)' },
   { href: 'mailto:411947628@qq.com', label: 'Email' },
 ];
+
+// Analytics（默认 Plausible）
+// 留空 '' = 不启用
+// 启用方法：
+//   1. 登录 https://plausible.io → 注册账号 → 添加站点 (例如 zhangzeyu-site.vercel.app)
+//   2. 拿到 domain（不带 https://）
+//   3. 填到下面的 plausibleDomain
+//   4. 部署后即可在 Plausible Dashboard 看流量
+// Plausible 自动追踪 AI 爬虫（GPTBot、ClaudeBot、Google-Extended、CCBot、PerplexityBot 等）
+export const ANALYTICS = {
+  plausibleDomain: 'zhangzeyu-site.vercel.app', // 填你 Plausible 添加的站点（不需要带 https://）
+  // 自部署 Plausible：用 selfHostedUrl 覆盖，例如 'https://plausible.yourdomain.com'
+  selfHostedUrl: '',
+};

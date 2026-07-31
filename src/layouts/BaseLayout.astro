@@ -2,7 +2,7 @@
 // 全站基础布局：HTML 骨架 + Header + Footer + SEO + Person JSON-LD
 // 每个具体页面都包一层 BaseLayout
 
-import { NAV, SITE, SOCIALS } from '../consts';
+import { NAV, SITE, SOCIALS, ANALYTICS } from '../consts';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEO from '../components/SEO.astro';
@@ -34,6 +34,16 @@ const {
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+
+    {ANALYTICS.plausibleDomain && (
+      <script
+        is:inline
+        defer
+        data-domain={ANALYTICS.plausibleDomain}
+        src={`${ANALYTICS.selfHostedUrl || 'https://plausible.io'}/js/script.js`}
+      ></script>
+    )}
+
     <SEO
       title={title}
       description={description}
